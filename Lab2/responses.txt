@@ -1,0 +1,8 @@
+5a)
+seems to give me the name of the object, who the owner is and the Object_type
+
+6a)
+same as 5a but only of Object Detail plus Created_datetime which just helps with when the data was last touched
+b)
+Second Table seems to be all the columns including names and other values stored when creating them in the table,
+Its useful when trying to see what is allowed in each column and things like, if it was calculated not put in by hand

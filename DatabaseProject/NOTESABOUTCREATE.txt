@@ -1,0 +1,2 @@
+CreateArmor, CreateTool, CreateWeapon needs to also CreateEquipment
+

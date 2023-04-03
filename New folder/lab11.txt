@@ -1,0 +1,38 @@
+	Q1) What are the differences in the execution plans for these two queries? 
+	
+	The first one goes straight into the table scan while the second goes to the top then index Scans
+	
+	(Q2) What is the difference in I/O and CPU cost for these two queries? (Hint:
+Look at the individual components of the execution plan to determine this;
+aggregate statistics can be difficult to interpret for multiple queries. You can also
+look at the messages tab.) 
+	
+	It seems like the max order from zOrder is more demanding in I/O and CPU
+		(I/0 = 0.0090509 CPU = 0.003821 compared to I/O = 0.0053472 CPU = 0.0025287)
+		
+	(Q3) What can you conclude about the relationship between aggregate data and
+indexes insofar as time optimization is concerned? 
+
+	It is much faster and optimal, to have it index when you know you are going to be organizing by it.
+	It may take (probably minimal time) to add and sort the index then try to sort when making the query.
+	
+	(Q4) This is the same situation that we examined in part (B), so your overall results
+should be similar. However, there should also be some more subtle similarities between
+the two queries. What are these similarities?
+
+	The main difference is table scan vs index scan, but again The unindex one seems to take more time.
+	
+	(Q5) Explain why there isn’t too much of a difference between the two queries in
+terms of execution times. 
+
+	 A lot of the time goes into hash match making the time diference between table scan and index scan pretty small.
+	 
+	(Q6) 2nd as the first pushes a lot more data
+	 
+	(Q7) I would assume saving the variable would make it faster to reference
+	
+	(Q8) 1st as overal its just running less commands that parse through data
+	
+	(Q9) Second as you don't have to go through the table twice.
+	
+	(Q10) 1st as unions are faster then ors

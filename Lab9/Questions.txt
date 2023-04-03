@@ -1,0 +1,75 @@
+1) All the Transactions arent actually committed till TranCount is one and it runs that command
+
+2) Just replaced the variables
+
+3) Rollback removes the last transaction and cannot be done after commit as it removed from transaction queue
+
+4)S, Sch-S, IX, X
+
+5)BEGIN TRANSACTION
+ UPDATE Employees
+ SET Title = 'Sales Manager', Address = '8 Houndstooth Road'
+ WHERE FirstName ='Anne', LastName='Dodsworth'
+
+
+6) Its a  single unit of work that when succesful and commited, changes the database
+
+7) If an employee wanted to update there info but it needed to be checked by a higher update
+
+8) A lock limits who can edit data when it is currently being edited
+
+9) Checks the amount of locks going on in a database
+
+10) CREATE PROCEDURE [insert_Order Details_1]
+(@OrderID_1 [int],
+ @ProductID_2 [int],
+ @UnitPrice_3 [money] = -1,
+ @Quantity_4 [smallint],
+ @Discount_5 [real] = 0)
+AS
+BEGIN TRY
+
+--Check if enough product in stock
+
+--if no price given, find original price
+IF @UnitPrice_3 < 0
+	SET @UnitPrice_3 = (SELECT UnitPrice From Products WHERE [ProductID] = @ProductID_2);
+
+--add the order
+BEGIN TRANSACTION
+INSERT INTO [Order Details]
+ ( [OrderID], [ProductID], [UnitPrice], [Quantity], [Discount])
+VALUES ( @OrderID_1, @ProductID_2, @UnitPrice_3, @Quantity_4, @Discount_5)
+
+IF (SELECT UnitsInStock FRom [Products] WHERE [ProductID] = @ProductID_2) < @Quantity_4
+	--ROLLBACK TRANSACTION
+	THROW 1, 'Not Enough Product', 1
+ELSE	
+--update quantity
+UPDATE [Products]
+SET [UnitsInStock] = [UnitsInStock] - @Quantity_4
+WHERE [ProductID] = @ProductID_2
+
+--if need to reorder print message
+IF (SELECT UnitsInStock FRom [Products] WHERE [ProductID] = @ProductID_2) < (SELECT ReorderLevel FRom [Products] WHERE [ProductID] = @ProductID_2)
+	PRINT "Please reorder the product";
+
+END TRY
+
+BEGIN CATCH
+SELECT ERROR_NUMBER() AS ErrorNumber
+     ,ERROR_SEVERITY() AS ErrorSeverity
+     ,ERROR_STATE() AS ErrorState
+     ,ERROR_PROCEDURE() AS ErrorProcedure
+     ,ERROR_LINE() AS ErrorLine
+     ,ERROR_MESSAGE() AS ErrorMessage;
+END CATCH
+GO
+
+11) So with the Transaction Rollback I had to do the insert first, while I didnt do the insert in the other option.
+
+12 a) The trigger approach is nice if you want to be able to insert outside of the store procedure as it would effect then too
+
+b) Better when there is no need to check orders besides if they can be made as its quicker
+
+c) Better if you want to have someone approve orders before they go through
